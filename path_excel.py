@@ -45,7 +45,13 @@ df['MÊS DE PAGAMENTO'] = pd.to_datetime(df['MÊS DE PAGAMENTO'],dayfirst=True)
 df['MÊS DE PAGAMENTO'] = df['MÊS DE PAGAMENTO'].dt.strftime('%b/%Y')
 
 #Moeda
+#Escreve R$ na cél 
+#df['VALOR LIQUIDO'] = df['VALOR LIQUIDO'].map('R${:,.2f}'.format)
 
+df['VALOR LIQUIDO'] = df['VALOR LIQUIDO'].apply(lambda x: '{:,.2f}'.format(x).replace('.', '#').replace(',', '.').replace('#', ',') if pd.notna(x) else '')
+
+# add the currency symbol
+df['VALOR LIQUIDO'] = df['VALOR LIQUIDO'].apply(lambda x: 'R$ ' + x)
 
 # #Dessa forma consigo imputar os dados selecionando a coluna e mantendo o padrão
 # for r, row in enumerate(df.values.tolist(), 2):
@@ -54,5 +60,5 @@ df['MÊS DE PAGAMENTO'] = df['MÊS DE PAGAMENTO'].dt.strftime('%b/%Y')
 
 # wb.save('new_Consumo_mod3.xlsx')
 
-#Desta forma altera o padrão do excel
+#Desta forma reseta o padrão do excel
 df.to_excel('new_Consumo_mod2.xlsx', index = False)
